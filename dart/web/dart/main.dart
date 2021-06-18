@@ -22,6 +22,8 @@
  */
 library topcodes;
 
+import 'package:js/js.dart';
+
 import 'dart:html';
 import 'dart:math';
 import 'dart:async';
@@ -32,6 +34,30 @@ part 'scanner.dart';
 part 'topcode.dart';
 part 'video.dart';
 
+@JS('scanCanvas')
+external set _scanCanvas(String Function(ImageElement) f);
+
+String scanCanvas(ImageElement image) {
+  CanvasElement canvas = document.getElementById("video-canvas");
+  canvas.height = image.height;
+  canvas.width = image.width;
+  print(image.height);
+
+  Scanner scanner = new Scanner();
+  CanvasRenderingContext2D ctx = canvas.context2D;
+  ctx.drawImage(image, 0, 0);
+  ImageData id = ctx.getImageData(0, 0, image.width, image.height);
+  List<TopCode> codes = scanner.scan(id, ctx);
+
+  // draw topcodes
+  List<dynamic> blah = [];
+  for (TopCode top in codes) {
+    top.draw(ctx);
+    blah.add(top.toJSON());
+  }
+  var json = { "topcodes" : blah };
+  return jsonEncode(json);
+}
 
 void initVideoScanner(String canvasId) {
   new VideoScanner(canvasId);
@@ -40,4 +66,20 @@ void initVideoScanner(String canvasId) {
 
 void main() {
   js.context['topcodes_initVideoScanner'] = initVideoScanner;
+  _scanCanvas = js.allowInterop(scanCanvas);
+
+  FileUploadInputElement input = document.getElementById("fileInput");
+
+  input.onInput.listen((event) {
+    var file = input.files[0];
+    var reader = new FileReader();
+    reader.onLoad.listen((event) {
+      var image = new ImageElement();
+      image.onLoad.listen((event) {
+        print(scanCanvas(image));
+      });
+      image.src = reader.result;
+    });
+    reader.readAsDataUrl(file);
+  });
 }

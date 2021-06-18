@@ -101,14 +101,15 @@ class VideoScanner {
     List<TopCode> codes = _scanner.scan(id, _ctx);
 
     // draw topcodes
-    var json = { "canvasId" : canvasId, "topcodes" : [] };
+    List<dynamic> blah = [];
     for (TopCode top in codes) {
       top.draw(_ctx);
-      json["topcodes"].add(top.toJSON());
+      blah.add(top.toJSON());
     }
+    var json = { "canvasId" : canvasId, "topcodes" : blah };
 
     // export JSON to javascript callback
-    js.context["TopCodes"].callMethod("_relayFrameData", [ canvasId, JSON.encode(json) ]);
+    js.context["TopCodes"].callMethod("_relayFrameData", [ canvasId, jsonEncode(json) ]);
   }
 }
 

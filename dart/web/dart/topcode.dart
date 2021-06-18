@@ -20,9 +20,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+
 part of topcodes;
-
-
 
 class TopCode {
   
@@ -33,7 +32,7 @@ class TopCode {
   static final int WIDTH = 8;
   
   /** Span of a data sector in radians */
-  static final double ARC = (2.0 * PI / 13.0);
+  static final double ARC = (2.0 * pi / 13.0);
   
   /** Symbol's id code or -1 if invalid */
   int code = -1;
@@ -162,13 +161,13 @@ class TopCode {
         core[i] = scanner.getSample3x3(sx, sy);
       }
       
-      // white rings
+      // red rings
       if (core[1] <= 128 || core[3] <= 128 ||
           core[4] <= 128 || core[6] <= 128) {
         return 0;
       }
       
-      // black ring
+      // blue ring
       if (core[2] > 128 || core[5] > 128) {
         return 0;
       }
@@ -225,14 +224,14 @@ class TopCode {
     double o = orientation;
     
     // background circle
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "red";
     ctx.beginPath();
-    ctx.arc(x, y, r, 0, PI * 2, true);
+    ctx.arc(x, y, r, 0, pi * 2, true);
     ctx.fill();
 
     for (int i=0; i<SECTORS; i++) {
       double start = i * -ARC + o;
-      ctx.fillStyle = ((bits & 0x1) > 0)? "white" : "black";
+      ctx.fillStyle = ((bits & 0x1) > 0)? "red" : "blue";
       ctx.beginPath();
       ctx.moveTo(x, y);
       ctx.arc(x, y, r, start, start - ARC, true);
@@ -241,19 +240,19 @@ class TopCode {
       bits >>= 1;
     }
     
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "red";
     ctx.beginPath();
-    ctx.arc(x, y, r - u, 0, PI * 2, true);
+    ctx.arc(x, y, r - u, 0, pi * 2, true);
     ctx.fill();
     
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "blue";
     ctx.beginPath();
-    ctx.arc(x, y, r - u * 2, 0, PI * 2, true);
+    ctx.arc(x, y, r - u * 2, 0, pi * 2, true);
     ctx.fill();
     
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "red";
     ctx.beginPath();
-    ctx.arc(x, y, r - u * 3, 0, PI * 2, true);
+    ctx.arc(x, y, r - u * 3, 0, pi * 2, true);
     ctx.fill();
     
     /*
