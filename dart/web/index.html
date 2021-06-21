@@ -6,6 +6,7 @@
 
 <body>
   <canvas id="video-canvas" width="800" height="600" style="background: #ddd;"></canvas>
+  <canvas id="image-canvas" width="800" height="600" style="background: #ddd;"></canvas>
   <br/>
   <button id="camera-button" onclick="TopCodes.startStopVideoScan('video-canvas')">Start / Stop</button>
   <input type="file" id="fileInput">
@@ -29,6 +30,29 @@
       ctx.arc(topcodes[i].x, topcodes[i].y, topcodes[i].radius, 0, Math.PI*2, true);
       ctx.fill();
     }
+  }
+
+  document.getElementById("fileInput").oninput = function () {
+    var imageLoader = document.getElementById('fileInput');
+    imageLoader.addEventListener('change', handleImage, false);
+    var canvas = document.getElementById('image-canvas');
+    var ctx = canvas.getContext('2d');
+
+
+    function handleImage(e){
+        var reader = new FileReader();
+        reader.onload = function(event){
+            var img = new Image();
+            img.onload = function(){
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img,0,0);
+                scanCanvas(img);
+            }
+            img.src = event.target.result;
+        }
+        reader.readAsDataURL(e.target.files[0]);     
+      }
   }
 
   </script>

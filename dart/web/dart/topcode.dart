@@ -161,13 +161,13 @@ class TopCode {
         core[i] = scanner.getSample3x3(sx, sy);
       }
       
-      // red rings
+      // white rings
       if (core[1] <= 128 || core[3] <= 128 ||
           core[4] <= 128 || core[6] <= 128) {
         return 0;
       }
       
-      // blue ring
+      // black ring
       if (core[2] > 128 || core[5] > 128) {
         return 0;
       }
@@ -224,14 +224,14 @@ class TopCode {
     double o = orientation;
     
     // background circle
-    ctx.fillStyle = "red";
+    ctx.fillStyle = "white";
     ctx.beginPath();
     ctx.arc(x, y, r, 0, pi * 2, true);
     ctx.fill();
 
     for (int i=0; i<SECTORS; i++) {
       double start = i * -ARC + o;
-      ctx.fillStyle = ((bits & 0x1) > 0)? "red" : "blue";
+      ctx.fillStyle = ((bits & 0x1) > 0)? "white" : "red";
       ctx.beginPath();
       ctx.moveTo(x, y);
       ctx.arc(x, y, r, start, start - ARC, true);
@@ -240,17 +240,17 @@ class TopCode {
       bits >>= 1;
     }
     
-    ctx.fillStyle = "red";
+    ctx.fillStyle = "white";
     ctx.beginPath();
     ctx.arc(x, y, r - u, 0, pi * 2, true);
     ctx.fill();
     
-    ctx.fillStyle = "blue";
+    ctx.fillStyle = "red";
     ctx.beginPath();
     ctx.arc(x, y, r - u * 2, 0, pi * 2, true);
     ctx.fill();
     
-    ctx.fillStyle = "red";
+    ctx.fillStyle = "white";
     ctx.beginPath();
     ctx.arc(x, y, r - u * 3, 0, pi * 2, true);
     ctx.fill();

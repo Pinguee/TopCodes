@@ -38,14 +38,20 @@ part 'video.dart';
 external set _scanCanvas(String Function(ImageElement) f);
 
 String scanCanvas(ImageElement image) {
-  CanvasElement canvas = document.getElementById("video-canvas");
+  CanvasElement canvas = document.getElementById("image-canvas");
   canvas.height = image.height;
   canvas.width = image.width;
-  print(image.height);
 
   Scanner scanner = new Scanner();
   CanvasRenderingContext2D ctx = canvas.context2D;
   ctx.drawImage(image, 0, 0);
+  ctx.save();
+  {
+    ctx.translate(image.width, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(image, 0, 0);
+  }
+  ctx.restore();
   ImageData id = ctx.getImageData(0, 0, image.width, image.height);
   List<TopCode> codes = scanner.scan(id, ctx);
 
@@ -63,23 +69,7 @@ void initVideoScanner(String canvasId) {
   new VideoScanner(canvasId);
 }
 
-
 void main() {
   js.context['topcodes_initVideoScanner'] = initVideoScanner;
   _scanCanvas = js.allowInterop(scanCanvas);
-
-  FileUploadInputElement input = document.getElementById("fileInput");
-
-  input.onInput.listen((event) {
-    var file = input.files[0];
-    var reader = new FileReader();
-    reader.onLoad.listen((event) {
-      var image = new ImageElement();
-      image.onLoad.listen((event) {
-        print(scanCanvas(image));
-      });
-      image.src = reader.result;
-    });
-    reader.readAsDataUrl(file);
-  });
 }
