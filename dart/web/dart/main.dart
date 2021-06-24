@@ -69,7 +69,12 @@ void initVideoScanner(String canvasId) {
   new VideoScanner(canvasId);
 }
 
+void initVideoScannerM(String canvasId) {
+  new VideoScannerMirror(canvasId);
+}
+
 void main() {
   js.context['topcodes_initVideoScanner'] = initVideoScanner;
+  js.context['topcodes_initVideoScannerM'] = initVideoScannerM;
   _scanCanvas = js.allowInterop(scanCanvas);
 }

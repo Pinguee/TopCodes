@@ -34,11 +34,38 @@ var TopCodes = {
       TopCodes.startVideoScan(canvasId);
   },
 
+  startStopVideoScanM : function(canvasId) {
+    TopCodes._mediaStreams[canvasId] ? 
+      TopCodes.stopVideoScan(canvasId) : 
+      TopCodes.startVideoScanM(canvasId);
+  },
 
   startVideoScan : function(canvasId) {
     // initialize the video scanner if necessary
     if (!(canvasId in TopCodes._mediaStreams)) {
       topcodes_initVideoScanner(canvasId);
+    }
+    var canvas = document.querySelector("#" + canvasId);
+    var video = document.querySelector("#" + canvasId + "-video");
+    if (canvas && video) {
+      var vw = parseInt(canvas.getAttribute('width'));
+      var vh = parseInt(canvas.getAttribute('height'));
+      var vc = { audio: false, video: { mandatory : { minWidth: vw, maxWidth : vw, minHeight : vh, maxHeight : vh }}}; 
+      navigator.mediaDevices.getUserMedia(vc)
+        .then(function(mediaStream) {
+          video.srcObject = mediaStream;
+          TopCodes._mediaStreams[canvasId] = mediaStream;
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+  },
+
+  startVideoScanM : function(canvasId) {
+    // initialize the video scanner if necessary
+    if (!(canvasId in TopCodes._mediaStreams)) {
+      topcodes_initVideoScannerM(canvasId);
     }
     var canvas = document.querySelector("#" + canvasId);
     var video = document.querySelector("#" + canvasId + "-video");
