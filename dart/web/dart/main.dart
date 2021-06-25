@@ -46,11 +46,6 @@ String scanCanvas(ImageElement image) {
   CanvasRenderingContext2D ctx = canvas.context2D;
   ctx.drawImage(image, 0, 0);
   ctx.save();
-  {
-    ctx.translate(image.width, 0);
-    ctx.scale(-1, 1);
-    ctx.drawImage(image, 0, 0);
-  }
   ctx.restore();
   ImageData id = ctx.getImageData(0, 0, image.width, image.height);
   List<TopCode> codes = scanner.scan(id, ctx);
