@@ -38,15 +38,33 @@ part 'video.dart';
 external set _scanCanvas(String Function(ImageElement) f);
 
 String scanCanvas(ImageElement image) {
+  double scale = 1;
+  print(scale);
+
   CanvasElement canvas = document.getElementById("image-canvas");
-  canvas.height = image.height;
-  canvas.width = image.width;
+
+  if (image.width > 1500 && image.width > image.height) {
+    scale = 1500/image.width;
+  }
+  if (image.height > 1500 && image.height > image.width) {
+    scale = 1500/image.height;
+  }
+
+  print(scale);
+
+  canvas.height = (image.height*scale).round();
+  canvas.width = (image.width*scale).round();
 
   Scanner scanner = new Scanner();
   CanvasRenderingContext2D ctx = canvas.context2D;
   ctx.drawImage(image, 0, 0);
   ctx.save();
+  {
+    ctx.scale(scale, scale);
+    ctx.drawImage(image, 0, 0);
+  }
   ctx.restore();
+
   ImageData id = ctx.getImageData(0, 0, image.width, image.height);
   List<TopCode> codes = scanner.scan(id, ctx);
 
