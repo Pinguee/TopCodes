@@ -39,7 +39,6 @@ external set _scanCanvas(String Function(ImageElement) f);
 
 String scanCanvas(ImageElement image) {
   double scale = 1;
-  print(scale);
 
   CanvasElement canvas = document.getElementById("image-canvas");
 
@@ -49,8 +48,6 @@ String scanCanvas(ImageElement image) {
   if (image.height > 1500 && image.height > image.width) {
     scale = 1500/image.height;
   }
-
-  print(scale);
 
   canvas.height = (image.height*scale).round();
   canvas.width = (image.width*scale).round();
